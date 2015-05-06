@@ -269,7 +269,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
         $scope.message = "Loading Tripler...";
         ts.getFixed($scope.inputID).then(function(d) {
-            console.log(d.data);
+            //console.log(d.data);
 
             //ts.fixed = ;
             ts.fixed = new Fixed(d.data.ID, d.data.Lat, d.data.Lon, d.data.LocString, d.data.MapZoom, d.data.Logo, d.data.PrimaryColor, d.data.Slogan, d.data.ShowCompany, d.data.FoursquareID, d.data.MapLimit, d.data.MapTerm);
@@ -289,9 +289,9 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                     });
                     break;
                 case "fq":
-                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare", 0).then(function(o){
+                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare&section=sights", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
-                        console.log(ts.fixed.Logo);
+                        console.log(ts.dynamic);
                         $scope.brand_logo = ts.fixed.Logo;
                     });
                     break;
@@ -355,7 +355,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                     // Animation complete.
                 });
             }
-            if(randCount == randBuss.length-1){
+            if(randCount == randBuss.length-2){
                 $( "#qr-wrapper ul" ).animate({
                     left: "0"
                 }, 500, function() {
