@@ -1,0 +1,113 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang=""> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8" lang=""> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9" lang=""> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang=""> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Tripler Beta 3</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+
+        <link rel="stylesheet" href="css/normalize.min.css">
+        <link rel="stylesheet" href="css/main.css">
+
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    </head>
+    <body ng-app="tripler" ng-controller="MainController">
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+
+
+
+
+
+
+
+        <div class="loader" ng-if="loading">
+
+            <div class="spinner"></div>
+        </div>
+        <div id="message" ng-if="message" ng-bind="message"></div>
+
+        <div ng-if="!validated && !loading" class="idform">
+            <h1 class="tripler">Tripler</h1>
+            <div>
+                <p>Enter ID</p>
+                <form>
+                    <input type="number" min="1" max="99999" step="1" onkeypress='return event.charCode >= 48 && event.charCode <= 57' width="300" ng-model="inputID" ng-change="changeID(inputID);"/>
+                    <input type="submit" class="button" ng-click="enterID();" value="Enter" /></form>
+            </div>
+        </div>
+
+        <div class="app" ng-if="validated && !loading">
+            <!--<h1 class="tripler logo">Tripler</h1>-->
+            <img src="{{brand_logo}}" class="brand_logo" />
+            <h1 id="setup_id">ID {{inputID}}</h1>
+
+            <!--<button ng-click="closeAllWindows">Close</button>-->
+
+
+
+            <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+                <ui-gmap-markers models="businesses" coords="'self'" icon="'icon'" click="onClicked">
+                    <ui-gmap-windows show="'showWindow'">
+                        <div ng-non-bindable>
+                            {{content}}
+                        </div>
+                    </ui-gmap-windows>
+                </ui-gmap-markers>
+            </ui-gmap-google-map>
+        </div>
+
+
+
+
+
+
+
+
+
+
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+        <script>window.jQuery || document.write('<script src="js/vendor/jquery-1.11.2.min.js"><\/script>')</script>
+
+
+        <script src="js/vendor/angular.min.js"></script>
+        <script src="js/vendor/angular-route.min.js"></script>
+        <script src="js/vendor/angular-cookies.min.js"></script>
+
+        <script src="js/vendor/qrcode.js"></script>
+        <script src="js/vendor/angular-qr.min.js"></script>
+
+        <script src='js/vendor/lodash.min.js'></script>
+        <script src='js/vendor/angular-google-maps.min.js'></script>
+
+        <script src="js/app.js"></script>
+
+
+
+
+
+        <script src="js/plugins.js"></script>
+        <script src="js/main.js"></script>
+
+
+
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <script>
+            (function(b,o,i,l,e,r){b.GoogleAnalyticsObject=l;b[l]||(b[l]=
+            function(){(b[l].q=b[l].q||[]).push(arguments)});b[l].l=+new Date;
+            e=o.createElement(i);r=o.getElementsByTagName(i)[0];
+            e.src='//www.google-analytics.com/analytics.js';
+            r.parentNode.insertBefore(e,r)}(window,document,'script','ga'));
+            ga('create','UA-XXXXX-X','auto');ga('send','pageview');
+        </script>
+    </body>
+</html>

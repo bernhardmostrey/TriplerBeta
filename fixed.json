@@ -1,0 +1,13 @@
+{
+  "ID": 1,
+  "Lat": "51.0557518",
+  "Lon": "3.7092999",
+  "MapZoom": "17",
+  "Logo": "http://doohapps.com/dooh/wp-content/uploads/2015/03/logo65.png",
+  "PrimaryColor":"#6CA2A6",
+  "Slogan":"DOOH voor iedereen.",
+  "ToonEigenLocatie":"True",
+  "FoursquareID":"54bd0644498e63100fd60388",
+  "MapPOILimit": "20",
+  "MapZoekTerm": ""
+}

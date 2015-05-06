@@ -1,0 +1,443 @@
+/*! HTML5 Boilerplate v5.0 | MIT License | http://h5bp.com/ */
+
+html {
+    color: #222;
+    font-size: 1em;
+    line-height: 1.4;
+}
+
+::-moz-selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+::selection {
+    background: #b3d4fc;
+    text-shadow: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 1em 0;
+    padding: 0;
+}
+
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+    vertical-align: middle;
+}
+
+fieldset {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+textarea {
+    resize: vertical;
+}
+
+.browserupgrade {
+    margin: 0.2em 0;
+    background: #ccc;
+    color: #000;
+    padding: 0.2em 0;
+}
+
+
+/* ==========================================================================
+   Author's custom styles
+   ========================================================================== */
+
+
+
+
+
+
+
+@font-face{
+    font-family: 'Tripler';
+    src: url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.eot');
+    src: url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.eot?#iefix') format('embedded-opentype'),
+    url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.woff') format('woff'),
+    url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.ttf') format('truetype'),
+    url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.svg#webfont') format('svg');
+}
+
+.tripler {
+    font-family: Tripler;
+}
+.brand_logo {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1;
+    max-width: 110px;
+}
+.logo {
+    position: absolute;
+    z-index: 999;
+    top: 0px;
+    right: 0;
+    background-color: #fff;
+    padding: 0px 5px;
+    line-height: 1.2;
+    width: 100px;
+    text-align: center;
+    margin: 0;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+.angular-google-map-container { height: 100vh; }
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+    display: none !important;
+}
+.ng-enter, .ng-move{
+    -webkit-animation: fadeIn 600ms;
+    -moz-animation: fadeIn 600ms;
+    -o-animation: fadeIn 600ms;
+    animation: fadeIn 600ms;
+}
+.window {
+    display: block;
+    overflow: hidden;
+    clear: both;
+    width: 450px;
+    height: 200px;
+}
+.window .name {
+    float: left;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 5px 0px 10px 0px;
+}
+.window .rating {
+    float: right;
+    font-size: 16px;
+    font-weight: 500;
+    margin: 5px 0px 10px 0px;
+}
+.window .det-left {
+    clear: both;
+    float: left;
+    width: 330px;
+}
+.window .det-left .adres {
+    margin: 5px 0px 15px 0px;
+}
+.window .det-left .snippet {
+    margin: 5px 0px 15px 0px;
+}
+.window .det-right {
+    float: right;
+    width: 100px;
+}
+.window .det-right .image {
+    text-align: right;
+}
+.window .det-right .image img {
+
+}
+
+.window .img_bg {
+    background-color: #49c3cc;
+    border-radius: 50%;
+}
+
+#message {
+    position: relative;
+    z-index: 19;
+    color: white;
+    background-color: #6CA2A6;
+    padding: 5px;
+}
+.loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #6CA2A6;
+    z-index: 18;
+}
+.spinner {
+    width: 60px;
+    height: 60px;
+    margin: 100px auto;
+    background-color: #fff;
+
+    border-radius: 100%;
+    -webkit-animation: scaleout 1.0s infinite ease-in-out;
+    animation: scaleout 1.0s infinite ease-in-out;
+
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -30px;
+    margin-top: -30px;
+}
+#setup_id {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 19;
+    background-color: white;
+    margin: 0;
+    padding: 5px 15px;
+}
+
+#sidebar {
+    float: left;
+    background-color: #ffffff;
+    color: #333;
+}
+#sidebar ul {
+    width: 260px;
+}
+#sidebar qr {
+
+}
+#sidebar li {
+    display: block;
+    line-height: 1.4;
+    margin: 15px;
+    width: 100px;
+    float: left;
+    text-align: center;
+    height: 150px;
+    font-size: 14px;
+}
+#sidebar p {
+    padding: 10px 10px;
+    display: block;
+    max-width: 190px;
+    word-wrap: break-word;
+}
+#sidebar span {
+    float: right;
+    background-color: #666;
+    height: 30px;
+    border-radius: 50%;
+    width: 30px;
+    text-align: center;
+    margin: 0px 10px;
+}
+.button {
+    background-color: rgb(72, 188, 196);
+    border: none;
+    border-radius: 4px;
+    padding: 10px 15px;
+    color: white;
+    text-decoration: none;
+}
+.idform {
+    text-align: center;
+    color: white;
+    background-image: url("../img/city.jpg");
+    background-size: cover;
+    padding: 50px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+}
+
+.idform h1 {
+
+}
+.idform div {
+    margin-top: 250px;
+}
+
+.idform div p {
+    margin: 15px 0px;
+}
+
+.idform div input[type="number"] {
+    display: block;
+    text-align: center;
+    margin: 0 auto;
+    width: 25%;
+    height: 120PX;
+    border-radius: 4px;
+    border: none;
+    background-color: rgba(255,255,255, 0.9);
+    color: #333;
+    font-size: 3rem;
+    letter-spacing: 15px;
+}
+
+.idform div .button {
+    margin: 25px;
+    display: inline-block;
+}
+
+@-webkit-keyframes scaleout {
+    0% { -webkit-transform: scale(0.0) }
+    100% {
+        -webkit-transform: scale(1.0);
+        opacity: 0;
+    }
+}
+
+@keyframes scaleout {
+    0% {
+        transform: scale(0.0);
+        -webkit-transform: scale(0.0);
+    } 100% {
+          transform: scale(1.0);
+          -webkit-transform: scale(1.0);
+          opacity: 0;
+      }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ==========================================================================
+   Media Queries
+   ========================================================================== */
+
+@media only screen and (min-width: 35em) {
+
+}
+
+@media print,
+       (-o-min-device-pixel-ratio: 5/4),
+       (-webkit-min-device-pixel-ratio: 1.25),
+       (min-resolution: 120dpi) {
+
+}
+
+/* ==========================================================================
+   Helper classes
+   ========================================================================== */
+
+.hidden {
+    display: none !important;
+    visibility: hidden;
+}
+
+.visuallyhidden {
+    border: 0;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+}
+
+.visuallyhidden.focusable:active,
+.visuallyhidden.focusable:focus {
+    clip: auto;
+    height: auto;
+    margin: 0;
+    overflow: visible;
+    position: static;
+    width: auto;
+}
+
+.invisible {
+    visibility: hidden;
+}
+
+.clearfix:before,
+.clearfix:after {
+    content: " ";
+    display: table;
+}
+
+.clearfix:after {
+    clear: both;
+}
+
+.clearfix {
+    *zoom: 1;
+}
+
+/* ==========================================================================
+   Print styles
+   ========================================================================== */
+
+@media print {
+    *,
+    *:before,
+    *:after {
+        background: transparent !important;
+        color: #000 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+    }
+
+    a,
+    a:visited {
+        text-decoration: underline;
+    }
+
+    a[href]:after {
+        content: " (" attr(href) ")";
+    }
+
+    abbr[title]:after {
+        content: " (" attr(title) ")";
+    }
+
+    a[href^="#"]:after,
+    a[href^="javascript:"]:after {
+        content: "";
+    }
+
+    pre,
+    blockquote {
+        border: 1px solid #999;
+        page-break-inside: avoid;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    tr,
+    img {
+        page-break-inside: avoid;
+    }
+
+    img {
+        max-width: 100% !important;
+    }
+
+    p,
+    h2,
+    h3 {
+        orphans: 3;
+        widows: 3;
+    }
+
+    h2,
+    h3 {
+        page-break-after: avoid;
+    }
+}
