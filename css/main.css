@@ -79,7 +79,9 @@ textarea {
     top: 0px;
     right: 0px;
     z-index: 1;
-    max-width: 110px;
+    max-width: 200px;
+    padding: 15px;
+    background-color: white;
 }
 .logo {
     position: absolute;
@@ -97,7 +99,7 @@ textarea {
     margin: 0;
     padding: 0;
 }
-.angular-google-map-container { height: 100vh; }
+.angular-google-map-container { height: 840px; }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
     display: none !important;
@@ -196,34 +198,45 @@ textarea {
     padding: 5px 15px;
 }
 
-#sidebar {
-    float: left;
+#qr-wrapper {
+    position: absolute;
     background-color: #ffffff;
     color: #333;
+    bottom: 0;
+    left: 0;
+    height: 190px;
+    right: 0;
+    z-index: 1;
+    overflow: hidden;
 }
-#sidebar ul {
-    width: 260px;
+#qr-wrapper ul {
+    width: 8000px;
+    clear: both;
+    height: 190px;
+    position: absolute;
 }
-#sidebar qr {
+#qr-wrapper qr {
 
 }
-#sidebar li {
+#qr-wrapper li {
     display: block;
     line-height: 1.4;
-    margin: 15px;
-    width: 100px;
+    padding: 15px 10px;
+    width: 250px;
     float: left;
     text-align: center;
-    height: 150px;
     font-size: 14px;
+    border-top: 4px solid #49c3cc;
 }
-#sidebar p {
-    padding: 10px 10px;
+#qr-wrapper li.border {
+    border-top: 4px solid #2e98d0;
+}
+#qr-wrapper p {
+    padding: 15px 10px;
     display: block;
-    max-width: 190px;
     word-wrap: break-word;
 }
-#sidebar span {
+#qr-wrapper span {
     float: right;
     background-color: #666;
     height: 30px;

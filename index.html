@@ -52,6 +52,15 @@
             <!--<button ng-click="closeAllWindows">Close</button>-->
 
 
+            <div id="qr-wrapper">
+                <ul>
+                    <li ng-repeat="r in randoms">
+                        <qr text="businesses[r].url" type-number="0" size="135"></qr>
+                        <p>{{businesses[r].name}}</p>
+                    </li>
+                </ul>
+            </div>
+
 
             <ui-gmap-google-map center='map.center' zoom='map.zoom'>
                 <ui-gmap-markers models="businesses" coords="'self'" icon="'icon'" click="onClicked">

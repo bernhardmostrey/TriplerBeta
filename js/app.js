@@ -175,8 +175,6 @@ app.factory('TriplerService', function($http){
                     console.log(value.error);
                 }else{
                     y = new taResult(n, value.address_obj, value.distance, value.percent_recommended, value.latitude, value.rating, value.cuisine, value.location_id, value.api_detail_url, value.ranking_data, value.location_string, value.web_url, value.price_level, value.rating_image_url, value.awards, value.name, value.num_reviews, value.write_review, value.category, value.subcategory, value.ancestors, value.see_all_photos, value.longitude);
-                    //fac.dynamic.Businesses[fac.dynamic.Businesses.indexOf(value)] = y;
-                    console.log(y.id);
                     fac.dynamic.Businesses.push(y);
 
                     cat = [];
@@ -185,25 +183,18 @@ app.factory('TriplerService', function($http){
 
                     var result = $.grep(fac.dynamic.Categories, function(e){ return e[0].localized_name == value.category.localized_name; });
                     if (result.length != 0) {
-                        //console.log("found");
                         fac.dynamic.Categories[fac.dynamic.Categories.indexOf(result[0])][1]++;
                     }else{
-                        //console.log("new");
                         fac.dynamic.Categories.push(cat);
                     }
                 }
                 n++;
             });
-            //l1 = list;
-            //return list;
-            //console.log("ret");
+
             fac.addReviewsToTripAdvisor();
-            //console.log("ret2");
             return def.resolve({1:fac.dynamic});
         }).error(function(data){
             console.log(data);
-            //$scope.error = true;
-            //$scope.message = "Oeps";
             return def.reject({0:data});
         });
 
@@ -219,8 +210,7 @@ app.factory('TriplerService', function($http){
                     console.log(value.error);
                 }else{
                     y = new fqResult(n, value.venue.id, value.venue.name, value.venue.location, value.venue.categories, value.venue.verified, value.venue.stats, value.venue.price, value.venue.rating, value.venue.ratingColor, value.venue.ratingSignals, value.venue.hours, value.venue.specials, value.venue.photos, value.venue.hereNow, value.tips, value.venue.shortUrl);
-                    //fac.dynamic.Businesses[fac.dynamic.Businesses.indexOf(value)] = y;
-                    //console.log(value);
+
                     fac.dynamic.Businesses.push(y);
 
                     cat = [];
@@ -229,27 +219,21 @@ app.factory('TriplerService', function($http){
 
                     var result = $.grep(fac.dynamic.Categories, function(e){ return e[0].name == value.venue.categories[0].name; });
                     if (result.length != 0) {
-                        //console.log("found");
                         fac.dynamic.Categories[fac.dynamic.Categories.indexOf(result[0])][1]++;
                     }else{
-                        //console.log("new");
                         fac.dynamic.Categories.push(cat);
                     }
                 }
                 n++;
             });
-            //l1 = list;
-            //return list;
-            //console.log("ret");
+
             fac.addCompanyToFoursquare(fac.fixed.FoursquareID);
             fac.addPhotosToFoursquare();
-            //console.log("ret2");
 
             return def.resolve({1:fac.dynamic});
         }).error(function(data){
             console.log(data);
-            //$scope.error = true;
-            //$scope.message = "Oeps";
+
             return def.reject({0:data});
         });
 
@@ -268,7 +252,6 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
 
     if($cookies["trip_id"]){
-        //console.log($cookies["trip_id"]);
         $scope.inputID = $cookies["trip_id"];
         startLoad();
     }else{
@@ -282,10 +265,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
     $scope.enterID = startLoad;
 
     function startLoad() {
-        //console.log($scope.inputID);
         $cookies["trip_id"] = $scope.inputID;
-
-
 
         $scope.message = "Loading Tripler...";
         ts.getFixed($scope.inputID).then(function(d) {
@@ -298,25 +278,18 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
             switch(api){
                 case "yelp":
                     ts.getYelp("php/get.php?location=Gent&limit=20&offset=0", 0).then(function(o){
-                        //console.log(o);
-                        //console.log(ts.dynamic);
-                        console.log(ts.fixed.zoom);
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         $scope.brand_logo = ts.fixed.Logo;
                     });
                     break;
                 case "ta":
-                    ts.getTripAdvisor("http://api.tripadvisor.com/api/partner/2.0/map/51.0533111,3.7211195?key=4bfede65b8eb4ceebd7148c9879b0c85&lang=nl&lunit=km&distance=30", 0).then(function(o){
-                        //console.log(o);
-                        //console.log(ts.dynamic);
+                    ts.getTripAdvisor("http://api.tripadvisor.com/api/partner/2.0/map/"+ts.fixed.Lat+","+ts.fixed.Lon+"?key=4bfede65b8eb4ceebd7148c9879b0c85&lang=nl&lunit=km&distance=30", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         $scope.brand_logo = ts.fixed.Logo;
                     });
                     break;
                 case "fq":
-                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll=51.0533111,3.7211195&v="+ts.today+"&m=foursquare", 0).then(function(o){
-                        //console.log(o);
-                        //console.log(ts.dynamic);
+                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         console.log(ts.fixed.Logo);
                         $scope.brand_logo = ts.fixed.Logo;
@@ -358,6 +331,8 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
     function startCycle(){
         var randBuss = randomNumbers($scope.businesses.length);
+        $scope.randoms = randBuss;
+        $scope.rand = randBuss[randCount];
         var randCount = 0;
         $interval(function(){
             angular.forEach($scope.businesses, function(value, key){
@@ -367,16 +342,40 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
             $scope.businesses[randBuss[randCount]].showWindow = true;
 
+            /* QR Width280 */
+
+            $("#qr-wrapper ul li").removeClass("border");
+            $("#qr-wrapper ul li:nth-child("+(randCount+1)+")").addClass("border");
+
+            if(randCount >= 4){
+                console.log("start left");
+                $( "#qr-wrapper ul" ).animate({
+                    left: "-=270"
+                }, 500, function() {
+                    // Animation complete.
+                });
+            }
+            if(randCount == randBuss.length-1){
+                $( "#qr-wrapper ul" ).animate({
+                    left: "0"
+                }, 500, function() {
+                    // Animation complete.
+                });
+            }
+
 
             randCount++;
-            if(randCount == $scope.businesses.length){
+            if(randCount == $scope.businesses.length-1){
                 randBuss = randomNumbers($scope.businesses.length);
+                $scope.randoms = randBuss;
+                $scope.rand = randBuss[randCount];
                 randCount = 0;
                 console.log("reset");
             }
             //$scope.$apply();
         }, 5000);
     }
+
 
     $scope.closeAllWindows = function(){
         console.log("close");
