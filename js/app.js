@@ -300,7 +300,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                     });
                     break;
                 case "fq":
-                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare&section=sights", 0).then(function(o){
+                    ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare&section=food", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         console.log(ts.dynamic);
                         $scope.brand_logo = ts.fixed.Logo;
@@ -340,7 +340,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
         function onMarkerClicked(marker){
             marker.showWindow = true;
         }
-        startCycle();
+        //startCycle();
     }
 
     function startCycle(){
@@ -353,7 +353,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
             angular.forEach($scope.businesses, function(value, key){
                 if(value.showWindow == true) value.showWindow = false;
             });
-            //$scope.$apply();
+            $scope.$apply();
 
             $scope.businesses[randBuss[randCount]].showWindow = true;
 
@@ -640,13 +640,29 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
     this.photos = photos;
     this.hereNow = hereNow;
     this.tips = tips;
-    image_url = "";
 
+
+    console.log(hours);
+
+
+    var img1 = "";
+    var img2 = "";
+    var img3 = "";
+    var img4 = "";
+    var img0 =  "";
     this.setPics = function(pics){
         this.pics = pics;
 
+
         if(pics != null && this.pics.length > 0){
-            image_url = pics[0].prefix+"300x100"+pics[0].suffix;
+            //image_url = pics[0].prefix+"500x300"+pics[0].suffix;
+
+            if(typeof(pics[0]) == "object")img0 = '<div class="big"><img src="'+pics[0].prefix+"500x300"+pics[0].suffix+'" alt="img0" /></div>';
+            if(typeof(pics[1]) == "object")img1 = '<div class="small"><img src="'+pics[1].prefix+"300x300"+pics[1].suffix+'" alt="img1" /></div>';
+            if(typeof(pics[2]) == "object")img2 = '<div class="small"><img src="'+pics[2].prefix+"300x300"+pics[2].suffix+'" alt="img2" /></div>';
+            if(typeof(pics[3]) == "object")img3 = '<div class="small"><img src="'+pics[3].prefix+"300x300"+pics[3].suffix+'" alt="img3" /></div>';
+            if(typeof(pics[4]) == "object")img4 = '<div class="small"><img src="'+pics[4].prefix+"300x300"+pics[4].suffix+'" alt="img4" /></div>';
+
         }
     };
 
@@ -660,9 +676,23 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
 
 
     this.url = "https://foursquare.com/v/foursquare-hq/"+id;
-    if(tips != ""){c_tips = tips[0].text}else{c_tips = "";}
+
+    var stars = "";
+    if(typeof(rating) != "undefined"){
+        if(rating > 1){stars += '<i class="star"></i>';}else{stars += '<i class="star gray"></i>';}
+        if(rating > 3){stars += '<i class="star"></i>';}else{stars += '<i class="star gray"></i>';}
+        if(rating > 5){stars += '<i class="star"></i>';}else{stars += '<i class="star gray"></i>';}
+        if(rating > 7){stars += '<i class="star"></i>';}else{stars += '<i class="star gray"></i>';}
+        if(rating > 9){stars += '<i class="star"></i>';}else{stars += '<i class="star gray"></i>';}
+    }
+
+
+    //console.log(typeof(tips[0]));
+    var c_tips = "";
+    if(typeof(tips[0]) != "undefined"){c_tips = tips[0].text;}
 
     this.setContent = function(){
-        this.content = '<div class="window"><div class="name">'+name+'</div><div class="rating">'+rating+'</div><div class="det-left"><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="snippet">'+c_tips+'</div></div><div class="det-right"><div class="image"><img src="'+image_url+'"/></div></div></div>';
+        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating">'+stars+'</div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="hours"><p>'+hours.status+'</p></div><div class="snippet">'+c_tips+'</div></div><div class="det-right"><div class="imgs_wrap">'+img0+'<div class="small-wrap">'+img1+img2+img3+'</div></div></div></div>';
+        console.log(this.content);
     }
 }

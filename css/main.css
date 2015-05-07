@@ -99,6 +99,9 @@ textarea {
     margin: 0;
     padding: 0;
 }
+body {
+    font-family: 'Titillium Web', sans-serif;
+}
 .angular-google-map-container { height: 840px; }
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
@@ -110,25 +113,51 @@ textarea {
     -o-animation: fadeIn 600ms;
     animation: fadeIn 600ms;
 }
+i.star {
+    opacity: 1;
+    height: 25px;
+    width: 25px;
+    z-index: 1;
+    background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+    background-size: contain;
+    display: inline-block;
+}
+i.star.gray {
+background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');;
+}
+
+
+
+img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibility: hidden;
+}
 .window {
     display: block;
     overflow: hidden;
     clear: both;
-    width: 450px;
-    height: 200px;
+    width: 680px;
+    height: 300px;
     -webkit-transition: all 300ms ease;
     -moz-transition: all 300ms ease;
     -ms-transition: all 300ms ease;
     -o-transition: all 300ms ease;
     transition: all 300ms ease;
+    position: relative;
+    z-index: 999;
+    font-family: 'Titillium Web', sans-serif;
+    color: #333;
+    font-size: 14px;
 }
-.window .name {
+.window .det-left .top {
+    clear: both;overflow: hidden;
+}
+.window .det-left .name {
     float: left;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 500;
     margin: 5px 0px 10px 0px;
+    text-transform: uppercase;
 }
-.window .rating {
+.window .det-left .rating {
     float: right;
     font-size: 16px;
     font-weight: 500;
@@ -137,9 +166,12 @@ textarea {
 .window .det-left {
     clear: both;
     float: left;
-    width: 330px;
+    width: 300px;
 }
 .window .det-left .adres {
+    margin: 5px 0px 15px 0px;
+}
+.window .det-left .hours {
     margin: 5px 0px 15px 0px;
 }
 .window .det-left .snippet {
@@ -147,13 +179,27 @@ textarea {
 }
 .window .det-right {
     float: right;
-    width: 100px;
+    width: 360px;
 }
-.window .det-right .image {
-    text-align: right;
-}
-.window .det-right .image img {
+.window .det-right .imgs_wrap {
 
+}
+.window .det-right .imgs_wrap .big {
+    overflow: hidden;
+    width: 360px;
+    height: 216px;
+}
+.window .det-right .imgs_wrap .big img {
+    width: 100%;
+}
+.window .det-right .imgs_wrap .small-wrap .small {
+    display: inline-block;
+    width: 120px;
+    overflow: hidden;
+    height: 72px;
+}
+.window .det-right .imgs_wrap .small-wrap .small img {
+    width: 100%;
 }
 
 .window .img_bg {
