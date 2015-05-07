@@ -39,20 +39,7 @@ app.factory('TriplerService', function($http){
 
     var fac = {};
 
-    fac.today = new Date();
-    var dd = fac.today.getDate();
-    var mm = fac.today.getMonth()+1; //January is 0!
-    var yyyy = fac.today.getFullYear();
-
-    if(dd<10) {
-        dd='0'+dd
-    }
-
-    if(mm<10) {
-        mm='0'+mm
-    }
-
-    fac.today = yyyy+mm+dd;
+    fac.today = getToday();
 
     fac.dynamic = new Dynamic(null, [], null, [], null);
     fac.fixed = new Fixed(null, null, null, null, null, null, null, null, null, null, null, null);
@@ -95,7 +82,7 @@ app.factory('TriplerService', function($http){
     };
     fac.addCompanyToFoursquare = function(id){
         $http.get("https://api.foursquare.com/v2/venues/"+id+"?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&v="+fac.today+"&m=foursquare").success(function(c){
-            value = c.response;
+            var value = c.response;
             //console.log(typeof(value.venue.name));
 
 
@@ -115,7 +102,7 @@ app.factory('TriplerService', function($http){
             if(typeof(value.tips) != "undefined"){tips=value.tips}else{tips=""};
 
             //console.log(name);
-            y = new fqResult(fac.dynamic.Businesses.length, value.venue.id,name,loc, categories, verified, stats, price, rating, ratingColor, ratingSignals, hours, specials, photos, hereNow, tips);
+            var y = new fqResult(fac.dynamic.Businesses.length, value.venue.id,name,loc, categories, verified, stats, price, rating, ratingColor, ratingSignals, hours, specials, photos, hereNow, tips);
             console.log(y);
             y.setContent();
             fac.dynamic.Businesses.push(y);
@@ -133,11 +120,11 @@ app.factory('TriplerService', function($http){
                 if(value.error){
                     console.log(value.error);
                 }else{
-                    y = new yelpResult(n, value.categories,value.display_phone,value.id,value.image_url,value.is_claimed,value.is_closed,value.location,value.mobile_url,value.name,value.phone,value.rating,value.rating_img_url,value.rating_img_url_large,value.rating_img_url_small,value.review_count,value.reviews,value.snippet_image_url,value.snippet_text,value.url)
+                    var y = new yelpResult(n, value.categories,value.display_phone,value.id,value.image_url,value.is_claimed,value.is_closed,value.location,value.mobile_url,value.name,value.phone,value.rating,value.rating_img_url,value.rating_img_url_large,value.rating_img_url_small,value.review_count,value.reviews,value.snippet_image_url,value.snippet_text,value.url)
                     //console.log(y);
                     fac.dynamic.Businesses.push(y);
                     angular.forEach(value.categories, function(value, key){
-                        cat = [];
+                        var cat = [];
                         cat[0] = value;
                         cat[1] = 1;
 
@@ -174,10 +161,10 @@ app.factory('TriplerService', function($http){
                 if(value.error){
                     console.log(value.error);
                 }else{
-                    y = new taResult(n, value.address_obj, value.distance, value.percent_recommended, value.latitude, value.rating, value.cuisine, value.location_id, value.api_detail_url, value.ranking_data, value.location_string, value.web_url, value.price_level, value.rating_image_url, value.awards, value.name, value.num_reviews, value.write_review, value.category, value.subcategory, value.ancestors, value.see_all_photos, value.longitude);
+                    var y = new taResult(n, value.address_obj, value.distance, value.percent_recommended, value.latitude, value.rating, value.cuisine, value.location_id, value.api_detail_url, value.ranking_data, value.location_string, value.web_url, value.price_level, value.rating_image_url, value.awards, value.name, value.num_reviews, value.write_review, value.category, value.subcategory, value.ancestors, value.see_all_photos, value.longitude);
                     fac.dynamic.Businesses.push(y);
 
-                    cat = [];
+                    var cat = [];
                     cat[0] = value.category;
                     cat[1] = 1;
 
@@ -201,6 +188,7 @@ app.factory('TriplerService', function($http){
         return def.promise();
     };
     fac.getFoursquare = function(url, n){
+        console.time("FQLoad");
         var def = $.Deferred();
 
         $http.get(url).success(function(data){
@@ -209,11 +197,11 @@ app.factory('TriplerService', function($http){
                 if(value.error){
                     console.log(value.error);
                 }else{
-                    y = new fqResult(n, value.venue.id, value.venue.name, value.venue.location, value.venue.categories, value.venue.verified, value.venue.stats, value.venue.price, value.venue.rating, value.venue.ratingColor, value.venue.ratingSignals, value.venue.hours, value.venue.specials, value.venue.photos, value.venue.hereNow, value.tips, value.venue.shortUrl);
+                    var y = new fqResult(n, value.venue.id, value.venue.name, value.venue.location, value.venue.categories, value.venue.verified, value.venue.stats, value.venue.price, value.venue.rating, value.venue.ratingColor, value.venue.ratingSignals, value.venue.hours, value.venue.specials, value.venue.photos, value.venue.hereNow, value.tips, value.venue.shortUrl);
 
                     fac.dynamic.Businesses.push(y);
 
-                    cat = [];
+                    var cat = [];
                     cat[0] = value.venue.categories[0];
                     cat[1] = 1;
 
@@ -230,6 +218,7 @@ app.factory('TriplerService', function($http){
             fac.addCompanyToFoursquare(fac.fixed.FoursquareID);
             fac.addPhotosToFoursquare();
 
+            console.timeEnd("FQLoad");
             return def.resolve({1:fac.dynamic});
         }).error(function(data){
             console.log(data);
@@ -243,8 +232,26 @@ app.factory('TriplerService', function($http){
     return fac;
 });
 
+function getToday(){
+    var d = new Date();
+    var dd = d.getDate();
+    var mm = d.getMonth()+1; //January is 0!
+    var yyyy = d.getFullYear();
+
+    if(dd<10) {
+        dd='0'+dd
+    }
+
+    if(mm<10) {
+        mm='0'+mm
+    }
+
+    return yyyy+mm+dd;
+}
+
 
 app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $filter, TriplerService, $cookies, $interval, $timeout) {
+    console.time("AppLoad");
     var ts = TriplerService;
 
     $scope.loading = true;
@@ -265,11 +272,15 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
     $scope.enterID = startLoad;
 
     function startLoad() {
+        console.timeEnd("AppLoad");
+        console.time("DataLoad");
         $cookies["trip_id"] = $scope.inputID;
 
         $scope.message = "Loading Tripler...";
+        console.time("FixedLoad");
         ts.getFixed($scope.inputID).then(function(d) {
             //console.log(d.data);
+            console.timeEnd("FixedLoad");
 
             //ts.fixed = ;
             ts.fixed = new Fixed(d.data.ID, d.data.Lat, d.data.Lon, d.data.LocString, d.data.MapZoom, d.data.Logo, d.data.PrimaryColor, d.data.Slogan, d.data.ShowCompany, d.data.FoursquareID, d.data.MapLimit, d.data.MapTerm);
@@ -305,6 +316,9 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
 
     function makeMap(zoom, lat, lon){
+        console.timeEnd("DataLoad");
+        console.time("MapLoad");
+
         $scope.categories = ts.dynamic.Categories;
         $scope.businesses = ts.dynamic.Businesses;
 
@@ -330,15 +344,16 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
     }
 
     function startCycle(){
+        console.timeEnd("MapLoad");
         var randBuss = randomNumbers($scope.businesses.length);
         $scope.randoms = randBuss;
         $scope.rand = randBuss[randCount];
         var randCount = 0;
         $interval(function(){
             angular.forEach($scope.businesses, function(value, key){
-                value.showWindow = false;
+                if(value.showWindow == true) value.showWindow = false;
             });
-            $scope.$apply();
+            //$scope.$apply();
 
             $scope.businesses[randBuss[randCount]].showWindow = true;
 
@@ -348,7 +363,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
             $("#qr-wrapper ul li:nth-child("+(randCount+1)+")").addClass("border");
 
             if(randCount >= 4){
-                console.log("start left");
+                //console.log("start left");
                 $( "#qr-wrapper ul" ).animate({
                     left: "-=270"
                 }, 500, function() {
@@ -370,7 +385,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                 $scope.randoms = randBuss;
                 $scope.rand = randBuss[randCount];
                 randCount = 0;
-                console.log("reset");
+                //console.log("reset");
             }
             //$scope.$apply();
         }, 5000);
