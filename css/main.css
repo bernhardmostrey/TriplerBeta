@@ -70,7 +70,13 @@ textarea {
     url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.ttf') format('truetype'),
     url('../fonts/Mark Simonson - Proxima Nova Condensed Bold Italic.svg#webfont') format('svg');
 }
-
+.anim {
+    -webkit-transition: all 300ms ease;
+    -moz-transition: all 300ms ease;
+    -ms-transition: all 300ms ease;
+    -o-transition: all 300ms ease;
+    transition: all 300ms ease;
+}
 .tripler {
     font-family: Tripler;
 }
@@ -124,11 +130,16 @@ i.star {
 }
 i.star.gray {
 background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');;
+    background-size: contain;
 }
 
 
 
 img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibility: hidden;
+}
+.gm-style-iw {
+    position: relative;
+    z-index: 999;
 }
 .window {
     display: block;
@@ -136,11 +147,6 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     clear: both;
     width: 680px;
     height: 300px;
-    -webkit-transition: all 300ms ease;
-    -moz-transition: all 300ms ease;
-    -ms-transition: all 300ms ease;
-    -o-transition: all 300ms ease;
-    transition: all 300ms ease;
     position: relative;
     z-index: 999;
     font-family: 'Titillium Web', sans-serif;
@@ -156,17 +162,22 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     font-weight: 500;
     margin: 5px 0px 10px 0px;
     text-transform: uppercase;
+    width: 150px;
 }
 .window .det-left .rating {
     float: right;
     font-size: 16px;
     font-weight: 500;
     margin: 5px 0px 10px 0px;
+    width: 150px;
+    text-align: right;
 }
 .window .det-left {
     clear: both;
     float: left;
     width: 300px;
+    height: 300px;
+    position: relative;
 }
 .window .det-left .adres {
     margin: 5px 0px 15px 0px;
@@ -176,6 +187,7 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
 }
 .window .det-left .snippet {
     margin: 5px 0px 15px 0px;
+    max-height: 90px;
 }
 .window .det-right {
     float: right;
@@ -186,17 +198,22 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
 }
 .window .det-right .imgs_wrap .big {
     overflow: hidden;
-    width: 360px;
+    width: 358px;
     height: 216px;
+    margin-bottom: 2px;
 }
 .window .det-right .imgs_wrap .big img {
     width: 100%;
 }
 .window .det-right .imgs_wrap .small-wrap .small {
     display: inline-block;
-    width: 120px;
+    width: 118px;
     overflow: hidden;
     height: 72px;
+    margin-right: 2px;
+}
+.window .det-right .imgs_wrap .small-wrap .small:nth-child(3){
+    margin-right: 0px;
 }
 .window .det-right .imgs_wrap .small-wrap .small img {
     width: 100%;
@@ -206,7 +223,16 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     background-color: #49c3cc;
     border-radius: 50%;
 }
+.powered {
+    text-align: right;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+}
+.powered img {
+    max-height: 35px;
 
+}
 #message {
     position: relative;
     z-index: 19;
@@ -255,13 +281,13 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     color: #333;
     bottom: 0;
     left: 0;
-    height: 190px;
+    height: 210px;
     right: 0;
     z-index: 1;
     overflow: hidden;
 }
 #qr-wrapper ul {
-    width: 8000px;
+    width: 20000px;
     clear: both;
     height: 190px;
     position: absolute;
@@ -278,17 +304,26 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     text-align: center;
     font-size: 14px;
     border-top: 4px solid #49c3cc;
+
+}
+#qr-wrapper li.border {
+    border-top: 4px solid #2e98d0;
     -webkit-transition: all 300ms ease;
     -moz-transition: all 300ms ease;
     -ms-transition: all 300ms ease;
     -o-transition: all 300ms ease;
     transition: all 300ms ease;
 }
-#qr-wrapper li.border {
-    border-top: 4px solid #2e98d0;
+#qr-wrapper li.border canvas {
+    height: 135px;
+    width: 135px;
+}
+#qr-wrapper li canvas {
+    height: 100px;
+    width: 100px;
 }
 #qr-wrapper p {
-    padding: 15px 10px;
+    padding: 0px 10px 15px 10px;
     display: block;
     word-wrap: break-word;
 }
@@ -347,6 +382,8 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     font-size: 3rem;
     letter-spacing: 15px;
 }
+
+
 
 .idform div .button {
     margin: 25px;

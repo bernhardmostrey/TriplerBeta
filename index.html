@@ -36,7 +36,7 @@
         </div>
         <div id="message" ng-if="message" ng-bind="message"></div>
 
-        <div ng-if="!validated && !loading" class="idform">
+        <!--<div ng-if="!validated && !loading" class="idform">
             <h1 class="tripler">Tripler</h1>
             <div>
                 <p>Enter ID</p>
@@ -44,7 +44,7 @@
                     <input type="number" min="1" max="99999" step="1" onkeypress='return event.charCode >= 48 && event.charCode <= 57' width="300" ng-model="inputID" ng-change="changeID(inputID);"/>
                     <input type="submit" class="button" ng-click="enterID();" value="Enter" /></form>
             </div>
-        </div>
+        </div>-->
 
         <div class="app" ng-if="validated && !loading">
             <!--<h1 class="tripler logo">Tripler</h1>-->
@@ -57,17 +57,18 @@
             <div id="qr-wrapper">
                 <ul>
                     <li ng-repeat="r in randoms">
-                        <qr text="businesses[r].url" type-number="0" size="135"></qr>
                         <p>{{businesses[r].name}}</p>
+                        <qr text="businesses[r].short" type-number="0" size="135"></qr>
+
                     </li>
                 </ul>
             </div>
 
 
-            <ui-gmap-google-map center='map.center' zoom='map.zoom'>
+            <ui-gmap-google-map center='map.center' zoom='map.zoom' pan="true">
                 <ui-gmap-markers models="businesses" coords="'self'" icon="'icon'" click="onClicked">
                     <ui-gmap-windows show="'showWindow'">
-                        <div ng-non-bindable>
+                        <div ng-non-bindable class="anim">
                             {{content}}
                         </div>
                     </ui-gmap-windows>
@@ -93,6 +94,7 @@
         <script src="js/vendor/angular-route.min.js"></script>
         <script src="js/vendor/angular-cookies.min.js"></script>
 
+        <script src="js/vendor/oauth-signature.min.js"></script>
         <script src="js/vendor/qrcode.js"></script>
         <script src="js/vendor/angular-qr.min.js"></script>
 

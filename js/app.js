@@ -80,6 +80,36 @@ app.factory('TriplerService', function($http){
         });
         //console.log(fac.dynamic.Businesses);
     };
+    fac.addShortUrlToFoursquare = function(){
+
+        angular.forEach(fac.dynamic.Businesses, function(value, key){
+            $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.url}).success(function(g){
+                value.setShortUrl(g.id);
+            });
+
+        });
+        //console.log(fac.dynamic.Businesses);
+    };
+    fac.addShortUrlToTripAdvisor = function(){
+
+        angular.forEach(fac.dynamic.Businesses, function(value, key){
+            $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.web_url}).success(function(g){
+                value.setShortUrl(g.id);
+            });
+
+        });
+        //console.log(fac.dynamic.Businesses);
+    };
+    fac.addShortUrlToYelp = function(){
+
+        angular.forEach(fac.dynamic.Businesses, function(value, key){
+            $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.url}).success(function(g){
+                value.setShortUrl(g.id);
+            });
+
+        });
+        //console.log(fac.dynamic.Businesses);
+    };
     fac.addCompanyToFoursquare = function(id){
         $http.get("https://api.foursquare.com/v2/venues/"+id+"?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&v="+fac.today+"&m=foursquare").success(function(c){
             var value = c.response;
@@ -115,6 +145,7 @@ app.factory('TriplerService', function($http){
         var def = $.Deferred();
 
         $http.get(url).success(function(data){
+            console.log(data);
             list = new Array();
             angular.forEach(data, function(value, key){
                 if(value.error){
@@ -153,6 +184,104 @@ app.factory('TriplerService', function($http){
 
         return def.promise();
     };
+
+
+    function randomString(length, chars) {
+        var result = '';
+        for (var i = length; i > 0; --i) result += chars[Math.round(Math.random() * (chars.length - 1))];
+        return result;
+    }
+    fac.getYelpJS = function(loc, term, n){
+        var method = 'GET';
+        var url = 'http://api.yelp.com/v2/search';
+        var params = {
+            callback: 'angular.callbacks._0',
+            location: loc,
+            oauth_consumer_key: 'UVOv68GWWuYUEHgIOs2kbA', //Consumer Key
+            oauth_token: 'rGxuTEJtPFiQswZ3ai4up_qKrDBWPlQy', //Token
+            oauth_signature_method: "HMAC-SHA1",
+            oauth_timestamp: new Date().getTime(),
+            oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+            term: term
+        };
+        var consumerSecret = 'igfK7uLT0q2o8buNgEUoWvGkcIU'; //Consumer Secret
+        var tokenSecret = '19rfxqDsWEfQ7k_QrVQUjEHWopw'; //Token Secret
+        var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
+        params['oauth_signature'] = signature;
+
+
+        var def = $.Deferred();
+
+        $http.jsonp(url, {params: params}).success(function(data){
+
+            list = new Array();
+            angular.forEach(data.businesses, function(value, key){
+                if(value.error){
+                    console.log(value.error);
+                }else{
+                    var y = new yelpResult(n, value.categories,value.display_phone,value.id,value.image_url,value.is_claimed,value.is_closed,value.location,value.mobile_url,value.name,value.phone,value.rating,value.rating_img_url,value.rating_img_url_large,value.rating_img_url_small,value.review_count,value.reviews,value.snippet_image_url,value.snippet_text,value.url)
+                    //console.log(y);
+                    fac.dynamic.Businesses.push(y);
+                    angular.forEach(value.categories, function(value, key){
+                        var cat = [];
+                        cat[0] = value;
+                        cat[1] = 1;
+
+                        var result = $.grep(fac.dynamic.Categories, function(e){ return e[0][1] == value[1]; });
+                        if (result.length != 0) {
+                            //console.log("found");
+                            fac.dynamic.Categories[fac.dynamic.Categories.indexOf(result[0])][1]++;
+                        }else{
+                            //console.log("new");
+                            fac.dynamic.Categories.push(cat);
+                        }
+                    });
+                }
+                n++;
+
+            });
+            //l1 = list;
+            //return list;
+            //fac.addReviewsToYelp();
+            fac.addShortUrlToYelp();
+            console.log(fac.dynamic);
+            return def.resolve({1:fac.dynamic});
+        }).error(function(data){
+            console.log(data);
+            //$scope.error = true;
+            //$scope.message = "Oeps";
+            return def.reject({0:data});
+        });
+
+        return def.promise();
+
+    };
+
+    fac.addReviewsToYelp = function(){
+        angular.forEach(fac.dynamic.Businesses, function(value, key){
+            var method = 'GET';
+            var url = 'http://api.yelp.com/v2/business/'+value.yid;
+            var params = {
+                callback: 'angular.callbacks._0',
+                location: "gent",
+                oauth_consumer_key: 'UVOv68GWWuYUEHgIOs2kbA', //Consumer Key
+                oauth_token: 'rGxuTEJtPFiQswZ3ai4up_qKrDBWPlQy', //Token
+                oauth_signature_method: "HMAC-SHA1",
+                oauth_timestamp: new Date().getTime(),
+                oauth_nonce: randomString(32, '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'),
+                term: "food"
+            };
+            var consumerSecret = 'igfK7uLT0q2o8buNgEUoWvGkcIU'; //Consumer Secret
+            var tokenSecret = '19rfxqDsWEfQ7k_QrVQUjEHWopw'; //Token Secret
+            var signature = oauthSignature.generate(method, url, params, consumerSecret, tokenSecret, { encodeSignature: false});
+            params['oauth_signature'] = signature;
+
+            $http.jsonp(url, {params: params}).success(function(data){
+                console.log(data);
+            });
+        });
+    };
+
     fac.getTripAdvisor = function(url, n){
         var def = $.Deferred();
 
@@ -179,6 +308,7 @@ app.factory('TriplerService', function($http){
             });
 
             fac.addReviewsToTripAdvisor();
+            fac.addShortUrlToTripAdvisor();
             return def.resolve({1:fac.dynamic});
         }).error(function(data){
             console.log(data);
@@ -217,6 +347,7 @@ app.factory('TriplerService', function($http){
 
             fac.addCompanyToFoursquare(fac.fixed.FoursquareID);
             fac.addPhotosToFoursquare();
+            fac.addShortUrlToFoursquare();
 
             console.timeEnd("FQLoad");
             return def.resolve({1:fac.dynamic});
@@ -251,14 +382,14 @@ function getToday(){
 
 
 app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $filter, TriplerService, $cookies, $interval, $timeout) {
-    console.time("AppLoad");
+    //console.time("AppLoad");
     var ts = TriplerService;
 
     $scope.loading = true;
     $scope.validated = false;
 
 
-    if($cookies["trip_id"]){
+    /*if($cookies["trip_id"]){
         $scope.inputID = $cookies["trip_id"];
         startLoad();
     }else{
@@ -269,16 +400,20 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
     $scope.changeID = function(i){
         $scope.inputID = i;
     };
-    $scope.enterID = startLoad;
+    $scope.enterID = startLoad;*/
+
+    //ts.getYelpJS("gent", "food");
+
+    startLoad();
 
     function startLoad() {
         console.timeEnd("AppLoad");
         console.time("DataLoad");
-        $cookies["trip_id"] = $scope.inputID;
+        //$cookies["trip_id"] = $scope.inputID;
 
         $scope.message = "Loading Tripler...";
         console.time("FixedLoad");
-        ts.getFixed($scope.inputID).then(function(d) {
+        ts.getFixed(1).then(function(d) {
             //console.log(d.data);
             console.timeEnd("FixedLoad");
 
@@ -288,7 +423,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
             var api = "fq";
             switch(api){
                 case "yelp":
-                    ts.getYelp("php/get.php?location=Gent&limit=20&offset=0", 0).then(function(o){
+                    ts.getYelpJS("Gent", "food", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         $scope.brand_logo = ts.fixed.Logo;
                     });
@@ -328,6 +463,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
         $scope.loading = false;
         $scope.validated = true;
 
+
         uiGmapGoogleMapApi.then(function(maps) {
             $scope.map = { center: { latitude: lat, longitude: lon}, zoom: zoom };
             angular.forEach($scope.businesses, function(value, key){
@@ -340,56 +476,69 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
         function onMarkerClicked(marker){
             marker.showWindow = true;
         }
+        randBuss = randomNumbers($scope.businesses.length);
         //startCycle();
+    }
+
+    var randBuss;
+    var randCount = 0;
+
+    function cycle(){
+        console.log(randCount);
+        angular.forEach($scope.businesses, function(value, key){
+            if(value.showWindow == true) value.showWindow = false;
+        });
+        $scope.$apply();
+
+        $scope.businesses[randBuss[randCount]].showWindow = true;
+
+        /* QR Width280 */
+
+        $("#qr-wrapper ul li").removeClass("border");
+        $("#qr-wrapper ul li:nth-child("+(randCount+1)+")").addClass("border");
+
+        if(randCount >= 4){
+            //console.log("start left");
+            $( "#qr-wrapper ul" ).animate({
+                left: "-=270"
+            }, 500, function() {
+                // Animation complete.
+            });
+        }
+        if(randCount == randBuss.length-2){
+            $( "#qr-wrapper ul" ).animate({
+                left: "0"
+            }, 500, function() {
+                // Animation complete.
+            });
+        }
+
+
+        randCount++;
+        if(randCount == $scope.businesses.length-1){
+            randBuss = randomNumbers($scope.businesses.length);
+            $scope.randoms = randBuss;
+            $scope.rand = randBuss[randCount];
+            randCount = 0;
+            //console.log("reset");
+        }
+        $scope.$apply();
     }
 
     function startCycle(){
         console.timeEnd("MapLoad");
-        var randBuss = randomNumbers($scope.businesses.length);
+
         $scope.randoms = randBuss;
         $scope.rand = randBuss[randCount];
         var randCount = 0;
-        $interval(function(){
-            angular.forEach($scope.businesses, function(value, key){
-                if(value.showWindow == true) value.showWindow = false;
-            });
-            $scope.$apply();
-
-            $scope.businesses[randBuss[randCount]].showWindow = true;
-
-            /* QR Width280 */
-
-            $("#qr-wrapper ul li").removeClass("border");
-            $("#qr-wrapper ul li:nth-child("+(randCount+1)+")").addClass("border");
-
-            if(randCount >= 4){
-                //console.log("start left");
-                $( "#qr-wrapper ul" ).animate({
-                    left: "-=270"
-                }, 500, function() {
-                    // Animation complete.
-                });
-            }
-            if(randCount == randBuss.length-2){
-                $( "#qr-wrapper ul" ).animate({
-                    left: "0"
-                }, 500, function() {
-                    // Animation complete.
-                });
-            }
 
 
-            randCount++;
-            if(randCount == $scope.businesses.length-1){
-                randBuss = randomNumbers($scope.businesses.length);
-                $scope.randoms = randBuss;
-                $scope.rand = randBuss[randCount];
-                randCount = 0;
-                //console.log("reset");
-            }
-            //$scope.$apply();
-        }, 5000);
+
+        //$interval(cycle(), 5000);
+        $interval(function(){cycle();}, 10000);
     }
+
+
 
 
     $scope.closeAllWindows = function(){
@@ -586,8 +735,15 @@ function taResult(n, address_obj, distance, percent_recommended, latitude, ratin
     this.showWindow = false;
     this.icon = "img/Place-icon.png";
 
+    this.short = "";
+    this.setShortUrl = function(s){
+        this.short = ""+s;
+    };
+
+    powered = '<img src="img/pow_ta.png" />';
+
     this.setContent = function(){
-        this.content = '<div class="window"><div class="name">'+name+'</div><div class="rating"><img src="'+rating_image_url+'"/></div><div class="det-left"><div class="adres"><p>'+address_obj.street1+'</p><p>'+address_obj.postalcode+' '+address_obj.city+'</p></div><div class="snippet">'+this.snippet+'</div></div><div class="det-right"><div class="image"><img src=""/></div></div></div>';
+        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating"><img src="'+rating_image_url+'"/></div></div><div class="adres"><p>'+address_obj.street1+'</p><p>'+address_obj.postalcode+' '+address_obj.city+'</p></div><div class="snippet">'+this.snippet+'</div><div class="powered">'+powered+'</div></div><div class="det-right"><div class="image"><img src=""/></div></div></div>';
     };
 
 
@@ -597,9 +753,12 @@ function taResult(n, address_obj, distance, percent_recommended, latitude, ratin
 function yelpResult(n, categories,display_phone,id,image_url,is_claimed,is_closed,location,mobile_url,name,phone,rating,rating_img_url,rating_img_url_large,rating_img_url_small,review_count,reviews,snippet_image_url,snippet_text,url){
     this.id = n;
     this.categories = categories;
-    this.display_phone = display_phone;
+
+    this.display_phone = "";
+    if(typeof(display_phone)!="undefined")this.display_phone = display_phone;
     this.yid = id;
-    this.image_url = image_url;
+    this.image_url = "";
+    if(typeof(image_url) != "undefined")this.image_url = image_url;
     this.is_claimed = is_claimed;
     this.is_closed = is_closed;
     this.location = location;
@@ -611,7 +770,8 @@ function yelpResult(n, categories,display_phone,id,image_url,is_claimed,is_close
     this.rating_img_url_large = rating_img_url_large;
     this.rating_img_url_small = rating_img_url_small;
     this.review_count = review_count;
-    this.reviews = reviews;
+    //this.reviews = reviews;
+    this.reviews = "";
     this.snippet_image_url = snippet_image_url;
     this.snippet_text = snippet_text;
     this.url = url;
@@ -620,7 +780,15 @@ function yelpResult(n, categories,display_phone,id,image_url,is_claimed,is_close
     this.longitude = location.coordinate.longitude;
     this.showWindow = false;
     this.icon = "img/Place-icon.png";
-    this.content = '<div class="window"><div class="name">'+name+'</div><div class="rating"><img src="'+rating_img_url+'"/></div><div class="det-left"><div class="adres"><p>'+location.address+'</p><p>'+location.postal_code+' '+location.city+'</p></div><div class="snippet">'+snippet_text+'</div></div><div class="det-right"><div class="image"><img src="'+image_url+'"/></div></div></div>';
+
+    this.short = "";
+    this.setShortUrl = function(s){
+        this.short = ""+s;
+    };
+
+    powered = '<img src="img/pow_yelp.png" />';
+    //this.content = "test";
+    this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating"><img src="'+rating_img_url+'"/></div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postal_code+' '+location.city+'</p></div><div class="snippet">'+snippet_text+'</div><div class="powered">'+powered+'</div></div><div class="det-right"><div class="image"><img src="'+image_url+'"/></div></div></div>';
 }
 
 function fqResult(n, id, name, location, categories, verified, stats, price, rating, ratingColor, ratingSignals, hours, specials, photos, hereNow, tips){
@@ -635,14 +803,17 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
     this.rating = rating;
     this.ratingColor = ratingColor;
     this.ratingSignals = ratingSignals;
-    this.hours = hours;
+
+    this.hours = "";
+    if(typeof(hours.status) != "undefined")this.hours = hours;
+
     this.specials = specials;
     this.photos = photos;
     this.hereNow = hereNow;
     this.tips = tips;
 
 
-    console.log(hours);
+    //console.log(hours);
 
 
     var img1 = "";
@@ -664,6 +835,11 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
             if(typeof(pics[4]) == "object")img4 = '<div class="small"><img src="'+pics[4].prefix+"300x300"+pics[4].suffix+'" alt="img4" /></div>';
 
         }
+    };
+
+    this.short = "";
+    this.setShortUrl = function(s){
+        this.short = ""+s;
     };
 
     this.latitude = location.lat;
@@ -691,8 +867,10 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
     var c_tips = "";
     if(typeof(tips[0]) != "undefined"){c_tips = tips[0].text;}
 
+    powered = '<img src="img/pow_fq.png" />';
+
     this.setContent = function(){
-        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating">'+stars+'</div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="hours"><p>'+hours.status+'</p></div><div class="snippet">'+c_tips+'</div></div><div class="det-right"><div class="imgs_wrap">'+img0+'<div class="small-wrap">'+img1+img2+img3+'</div></div></div></div>';
-        console.log(this.content);
+        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating">'+stars+'</div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="hours"><p>'+hours.status+'</p></div><div class="snippet">'+c_tips+'</div><div class="powered">'+powered+'</div></div><div class="det-right"><div class="imgs_wrap">'+img0+'<div class="small-wrap">'+img1+img2+img3+'</div></div></div></div>';
+        //console.log(this.content);
     }
 }
