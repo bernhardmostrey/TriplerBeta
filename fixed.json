@@ -11,6 +11,7 @@
 "FoursquareID":"54bd0644498e63100fd60388",
 "MapLimit": "20",
 "MapTerm": "",
-  "POICategory":"food",
+  "CycleTime":"10",
+  //"POICategory":"food",
   "API":"fq"
 }

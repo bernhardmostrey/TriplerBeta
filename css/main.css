@@ -291,6 +291,7 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     clear: both;
     height: 190px;
     position: absolute;
+    left: 810px;
 }
 #qr-wrapper qr {
 
@@ -319,8 +320,8 @@ img[src="https://maps.gstatic.com/mapfiles/api-3/images/mapcnt3.png"] {visibilit
     width: 135px;
 }
 #qr-wrapper li canvas {
-    height: 100px;
-    width: 100px;
+    height: 85px;
+    width: 85px;
 }
 #qr-wrapper p {
     padding: 0px 10px 15px 10px;
