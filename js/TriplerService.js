@@ -84,6 +84,7 @@ app.factory('TriplerService', function($http){
         //console.log(fac.dynamic.Businesses);
     };
     fac.addCompanyToFoursquare = function(id){
+        var def = $.Deferred();
         $http.get("https://api.foursquare.com/v2/venues/"+id+"?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&v="+fac.today+"&m=foursquare").success(function(c){
             var value = c.response;
             //console.log(typeof(value.venue.name));
@@ -112,8 +113,10 @@ app.factory('TriplerService', function($http){
             y.setContent();
             fac.dynamic.Businesses.push(y);
             //console.log(fac.dynamic.Businesses);
+            return def.resolve();
 
         });
+        return def.promise();
     };
 
     fac.getYelp = function(url, n){
@@ -320,12 +323,15 @@ app.factory('TriplerService', function($http){
                 n++;
             });
 
-            fac.addCompanyToFoursquare(fac.fixed.FoursquareID);
-            fac.addPhotosToFoursquare();
-            fac.addShortUrlToFoursquare();
+            fac.addCompanyToFoursquare(fac.fixed.FoursquareID).then(function(){
+                fac.addPhotosToFoursquare();
+                fac.addShortUrlToFoursquare();
+                console.timeEnd("FQLoad");
+                return def.resolve({1:fac.dynamic});
+            });
 
-            console.timeEnd("FQLoad");
-            return def.resolve({1:fac.dynamic});
+
+
         }).error(function(data){
             console.log(data);
 
