@@ -11,12 +11,6 @@ app.config(function(uiGmapGoogleMapApiProvider) {
     });
 });
 
-
-
-
-
-
-
 app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $filter, TriplerService, $cookies, $interval, $timeout) {
     //console.time("AppLoad");
     var ts = TriplerService;
@@ -54,7 +48,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
             console.timeEnd("FixedLoad");
 
             //ts.fixed = ;
-            ts.fixed = new Fixed(d.data.ID, d.data.Lat, d.data.Lon, d.data.LocString, d.data.MapZoom, d.data.Logo, d.data.PrimaryColor, d.data.Slogan, d.data.ShowCompany, d.data.FoursquareID, d.data.MapLimit, d.data.MapTerm, d.data.CycleTime, d.data.API);
+            ts.fixed = new Fixed(d.data.Lat, d.data.Lon, d.data.LocString, d.data.MapZoom, d.data.Logo, d.data.PrimaryColor, d.data.Slogan, d.data.ShowCompany, d.data.FoursquareID, d.data.MapLimit, d.data.MapTerm, d.data.CycleTime, d.data.API, d.data.Businesses);
             console.log(ts.fixed);
             var api = ts.fixed.API;
             switch(api){
@@ -64,18 +58,21 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                         $scope.brand_logo = ts.fixed.Logo;
                     });
                     break;
+                    break;
                 case "ta":
                     ts.getTripAdvisor("http://api.tripadvisor.com/api/partner/2.0/map/"+ts.fixed.Lat+","+ts.fixed.Lon+"?key=4bfede65b8eb4ceebd7148c9879b0c85&lang=nl&lunit=km&distance=30", 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
                         $scope.brand_logo = ts.fixed.Logo;
-                    });
+                    }
+                    );
                     break;
                 case "fq":
                     ts.getFoursquare("https://api.foursquare.com/v2/venues/explore?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&ll="+ts.fixed.Lat+","+ts.fixed.Lon+"&v="+ts.today+"&m=foursquare&section=food&limit="+ts.fixed.MapLimit, 0).then(function(o){
                         makeMap(parseInt(ts.fixed.MapZoom), ts.fixed.Lat, ts.fixed.Lon);
-                        console.log(ts.dynamic);
+                        //console.log(ts.dynamic);
                         $scope.brand_logo = ts.fixed.Logo;
                     });
+                    break;
                     break;
             }
         });
@@ -83,17 +80,14 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
 
     }
 
-
-
-
     function makeMap(zoom, lat, lon){
         console.timeEnd("DataLoad");
         console.time("MapLoad");
 
-        $scope.categories = ts.dynamic.Categories;
-        $scope.businesses = ts.dynamic.Businesses;
+        //$scope.categories = ts.dynamic.Categories;
+        $scope.businesses = ts.fixed.Businesses;
 
-        $scope.categories.sort(function(a, b){return a[1] - b[1]}).reverse();
+        //$scope.categories.sort(function(a, b){return a[1] - b[1]}).reverse();
 
         $scope.message = false;
         $scope.loading = false;
@@ -121,15 +115,83 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
     var randBuss;
     var randCount = 0;
 
-    function cycle(){
+    function cycleOld(){
         console.log(randCount);
         angular.forEach($scope.businesses, function(value, key){
             if(value.showWindow == true) value.showWindow = false;
         });
         $scope.$apply();
+            $("#qr-wrapper ul li").removeClass("border");
+            console.log(randCount + " of "+$scope.businesses.length);
+            if(randCount == $scope.businesses.length){
+                randBuss = randomNumbers($scope.businesses.length);
+                $scope.randoms = randBuss;
+                $scope.rand = randBuss[randCount];
+                randCount = 0;
+                //console.log("reset");
+                $( "#qr-wrapper ul" ).animate({
+                    left: "810"
+                }, 500, function() {
+                    // Animation complete.
+                    $("#qr-wrapper ul li:nth-child("+(randCount)+")").addClass("border");
+                });
+            }else{
+                console.log(randCount);
+                if(randCount == 0){
+                    $("#qr-wrapper ul li:nth-child("+1+")").addClass("border");
 
+                }
+            }
+
+            $scope.businesses[randBuss[randCount]].showWindow = true;
+
+            if(randCount > 0){
+                //console.log("start left");
+                $( "#qr-wrapper ul" ).animate({
+                    left: "-=270"
+                }, 500, function() {
+                    // Animation complete.
+                    $("#qr-wrapper ul li:nth-child("+(randCount)+")").addClass("border");
+                });
+            }
+            /*if(randCount == randBuss.length-1){
+
+             }*/
+
+            randCount++;
+
+            //$scope.$apply();
+
+
+    }
+    function cycle(){
+        closeAll().then(function(){
+            checkQRs().then(function(){
+                $scope.businesses[randBuss[randCount]].showWindow = true;
+                moveQRs().then(function(){
+                    randCount++;
+                    //$scope.$apply();
+                });
+            });
+        });
+
+
+    }
+
+    function closeAll(){
+        var def = $.Deferred();
+
+        angular.forEach($scope.businesses, function(value, key){
+            if(value.showWindow == true) value.showWindow = false;
+            //console.log(value);
+        });
+        //$scope.$apply();
+        return def.resolve();
+    }
+    function checkQRs(){
+        var def = $.Deferred();
         $("#qr-wrapper ul li").removeClass("border");
-        console.log(randCount + " of "+$scope.businesses.length);
+        //console.log(randCount + " of "+$scope.businesses.length);
         if(randCount == $scope.businesses.length){
             randBuss = randomNumbers($scope.businesses.length);
             $scope.randoms = randBuss;
@@ -142,23 +204,19 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                 // Animation complete.
                 $("#qr-wrapper ul li:nth-child("+(randCount)+")").addClass("border");
             });
+            return def.resolve();
         }else{
-            console.log(randCount);
+            //console.log(randCount);
             if(randCount == 0){
                 $("#qr-wrapper ul li:nth-child("+1+")").addClass("border");
 
             }
         }
-
-
-
-
+        return def.resolve();
+    }
+    function moveQRs(){
+        var def = $.Deferred();
         $scope.businesses[randBuss[randCount]].showWindow = true;
-
-        /* QR Width280 */
-
-
-
 
         if(randCount > 0){
             //console.log("start left");
@@ -169,15 +227,7 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
                 $("#qr-wrapper ul li:nth-child("+(randCount)+")").addClass("border");
             });
         }
-        if(randCount == randBuss.length-1){
-
-        }
-
-
-
-        randCount++;
-
-        //$scope.$apply();
+        return def.resolve();
     }
 
     function startCycle(){
@@ -186,8 +236,6 @@ app.controller("MainController", function($scope, $http, uiGmapGoogleMapApi, $fi
         $scope.randoms = randBuss;
         $scope.rand = randBuss[randCount];
         var randCount = 0;
-
-
 
         //$interval(cycle(), 5000);
 

@@ -9,7 +9,7 @@ app.factory('TriplerService', function($http){
 
     fac.today = getToday();
 
-    fac.dynamic = new Dynamic(null, [], null, [], null);
+    //fac.dynamic = new Dynamic(null, [], null, [], null);
     fac.fixed = new Fixed(null, null, null, null, null, null, null, null, null, null, null, null, null, null);
 
     fac.checkUsage = function(){};
@@ -17,8 +17,8 @@ app.factory('TriplerService', function($http){
     fac.checkLocation = function(){};
     fac.updateLocation = function(){};
 
-    fac.getFixed = function(id){
-        return $http.get("http://doohapps.com/citytripapp/read.php?id="+id);
+    fac.getFixed = function(){
+        return $http.get("http://doohapps.com/citytripapp/read.php");
     };
 
     /*fac.getFixed = function(id){
@@ -34,54 +34,54 @@ app.factory('TriplerService', function($http){
 
     fac.addReviewsToTripAdvisor = function(){
 
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             $http.get(value.api_detail_url).success(function(details){
                 value.setReviews(details.reviews);
                 value.setContent();
             });
         });
-        //console.log(fac.dynamic.Businesses);
+        //console.log(fac.fixed.Businesses);
     };
     fac.addPhotosToFoursquare = function(){
 
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             $http.get("https://api.foursquare.com/v2/venues/"+value.fid+"/photos?client_id=RUPUSGLEH3TPT0TTINACNKO1DYNH0QNIXOKOGN11BYKADTF2&client_secret=MEN100NRVI4JFP5NICL0WL3U32B2M2GDLG0TIC0LAVSNQKIN&v="+fac.today+"&m=foursquare").success(function(pics){
                 value.setPics(pics.response.photos.items);
                 value.setContent();
             });
 
         });
-        //console.log(fac.dynamic.Businesses);
+        //console.log(fac.fixed.Businesses);
     };
     fac.addShortUrlToFoursquare = function(){
 
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.url}).success(function(g){
                 value.setShortUrl(g.id);
             });
 
         });
-        //console.log(fac.dynamic.Businesses);
+        //console.log(fac.fixed.Businesses);
     };
     fac.addShortUrlToTripAdvisor = function(){
 
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.web_url}).success(function(g){
                 value.setShortUrl(g.id);
             });
 
         });
-        //console.log(fac.dynamic.Businesses);
+        //console.log(fac.fixed.Businesses);
     };
     fac.addShortUrlToYelp = function(){
 
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             $http.post("https://www.googleapis.com/urlshortener/v1/url?key=AIzaSyBioj_ghWQx_SdIPrs4FjsmwgEYx5NRYoA", {"longUrl": value.url}).success(function(g){
                 value.setShortUrl(g.id);
             });
 
         });
-        //console.log(fac.dynamic.Businesses);
+        //console.log(fac.fixed.Businesses);
     };
     fac.addCompanyToFoursquare = function(id){
         var def = $.Deferred();
@@ -107,12 +107,12 @@ app.factory('TriplerService', function($http){
 
 
             //console.log(name);
-            var y = new fqResult(fac.dynamic.Businesses.length, value.venue.id,name,loc, categories, verified, stats, price, rating, ratingColor, ratingSignals, hours, specials, photos, hereNow, tips);
+            var y = new fqResult(fac.fixed.Businesses.length, value.venue.id,name,loc, categories, verified, stats, price, rating, ratingColor, ratingSignals, hours, specials, photos, hereNow, tips);
             y.icon = "img/here.png";
             console.log(y);
             y.setContent();
-            fac.dynamic.Businesses.push(y);
-            //console.log(fac.dynamic.Businesses);
+            fac.fixed.Businesses.push(y);
+            //console.log(fac.fixed.Businesses);
             return def.resolve();
 
         });
@@ -131,7 +131,7 @@ app.factory('TriplerService', function($http){
                 }else{
                     var y = new yelpResult(n, value.categories,value.display_phone,value.id,value.image_url,value.is_claimed,value.is_closed,value.location,value.mobile_url,value.name,value.phone,value.rating,value.rating_img_url,value.rating_img_url_large,value.rating_img_url_small,value.review_count,value.reviews,value.snippet_image_url,value.snippet_text,value.url)
                     //console.log(y);
-                    fac.dynamic.Businesses.push(y);
+                    fac.fixed.Businesses.push(y);
                     angular.forEach(value.categories, function(value, key){
                         var cat = [];
                         cat[0] = value;
@@ -191,7 +191,7 @@ app.factory('TriplerService', function($http){
         var def = $.Deferred();
 
         $http.jsonp(url, {params: params}).success(function(data){
-
+            fac.fixed.Businesses = [];
             list = new Array();
             angular.forEach(data.businesses, function(value, key){
                 if(value.error){
@@ -199,8 +199,8 @@ app.factory('TriplerService', function($http){
                 }else{
                     var y = new yelpResult(n, value.categories,value.display_phone,value.id,value.image_url,value.is_claimed,value.is_closed,value.location,value.mobile_url,value.name,value.phone,value.rating,value.rating_img_url,value.rating_img_url_large,value.rating_img_url_small,value.review_count,value.reviews,value.snippet_image_url,value.snippet_text,value.url)
                     //console.log(y);
-                    fac.dynamic.Businesses.push(y);
-                    angular.forEach(value.categories, function(value, key){
+                    fac.fixed.Businesses.push(y);
+                    /*angular.forEach(value.categories, function(value, key){
                         var cat = [];
                         cat[0] = value;
                         cat[1] = 1;
@@ -213,7 +213,7 @@ app.factory('TriplerService', function($http){
                             //console.log("new");
                             fac.dynamic.Categories.push(cat);
                         }
-                    });
+                    });*/
                 }
                 n++;
 
@@ -236,7 +236,7 @@ app.factory('TriplerService', function($http){
     };
 
     fac.addReviewsToYelp = function(){
-        angular.forEach(fac.dynamic.Businesses, function(value, key){
+        angular.forEach(fac.fixed.Businesses, function(value, key){
             var method = 'GET';
             var url = 'http://api.yelp.com/v2/business/'+value.yid;
             var params = {
@@ -264,14 +264,15 @@ app.factory('TriplerService', function($http){
         var def = $.Deferred();
 
         $http.get(url).success(function(data){
+            fac.fixed.Businesses = [];
             angular.forEach(data.data, function(value, key){
                 if(value.error){
                     console.log(value.error);
                 }else{
                     var y = new taResult(n, value.address_obj, value.distance, value.percent_recommended, value.latitude, value.rating, value.cuisine, value.location_id, value.api_detail_url, value.ranking_data, value.location_string, value.web_url, value.price_level, value.rating_image_url, value.awards, value.name, value.num_reviews, value.write_review, value.category, value.subcategory, value.ancestors, value.see_all_photos, value.longitude);
-                    fac.dynamic.Businesses.push(y);
+                    fac.fixed.Businesses.push(y);
 
-                    var cat = [];
+                    /*var cat = [];
                     cat[0] = value.category;
                     cat[1] = 1;
 
@@ -280,7 +281,7 @@ app.factory('TriplerService', function($http){
                         fac.dynamic.Categories[fac.dynamic.Categories.indexOf(result[0])][1]++;
                     }else{
                         fac.dynamic.Categories.push(cat);
-                    }
+                    }*/
                 }
                 n++;
             });
@@ -300,6 +301,7 @@ app.factory('TriplerService', function($http){
         var def = $.Deferred();
 
         $http.get(url).success(function(data){
+            fac.fixed.Businesses = [];
             angular.forEach(data.response.groups[0].items, function(value, key){
                 //console.log(value);
                 if(value.error){
@@ -307,18 +309,18 @@ app.factory('TriplerService', function($http){
                 }else{
                     var y = new fqResult(n, value.venue.id, value.venue.name, value.venue.location, value.venue.categories, value.venue.verified, value.venue.stats, value.venue.price, value.venue.rating, value.venue.ratingColor, value.venue.ratingSignals, value.venue.hours, value.venue.specials, value.venue.photos, value.venue.hereNow, value.tips, value.venue.shortUrl);
 
-                    fac.dynamic.Businesses.push(y);
+                    fac.fixed.Businesses.push(y);
 
-                    var cat = [];
+                    /*var cat = [];
                     cat[0] = value.venue.categories[0];
                     cat[1] = 1;
 
-                    var result = $.grep(fac.dynamic.Categories, function(e){ return e[0].name == value.venue.categories[0].name; });
+                    var result = $.grep(fac.fixed.Categories, function(e){ return e[0].name == value.venue.categories[0].name; });
                     if (result.length != 0) {
-                        fac.dynamic.Categories[fac.dynamic.Categories.indexOf(result[0])][1]++;
+                        fac.fixed.Categories[fac.fixed.Categories.indexOf(result[0])][1]++;
                     }else{
-                        fac.dynamic.Categories.push(cat);
-                    }
+                        fac.fixed.Categories.push(cat);
+                    }*/
                 }
                 n++;
             });
@@ -327,13 +329,17 @@ app.factory('TriplerService', function($http){
                 fac.addPhotosToFoursquare();
                 fac.addShortUrlToFoursquare();
                 console.timeEnd("FQLoad");
-                return def.resolve({1:fac.dynamic});
+                //console.log(JSON.stringify(fac.fixed.Businesses));
+                return def.resolve({1:fac.fixed});
             });
 
 
 
         }).error(function(data){
             console.log(data);
+
+            //dynamic settings laden
+
 
             return def.reject({0:data});
         });

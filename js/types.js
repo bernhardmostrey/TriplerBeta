@@ -1,16 +1,16 @@
 /**
  * Created by bernhardmostrey on 13/05/15.
  */
-function Dynamic(id, categories, selectedCategory, businesses, selectedBusiness){
+/*function Dynamic(id, categories, selectedCategory, businesses, selectedBusiness){
     this.ID = id;
     this.Categories = categories;
     this.SelectedCategory = selectedCategory;
     this.Businesses = businesses;
     this.SelectedBusiness = selectedBusiness;
-}
+}*/
 
-function Fixed(id, lat, lon, locstring, mapzoom, logo, primarycolor, slogan, showcompany, foursquareid, maplimit, mapterm, cycletime, api){
-    this.ID = id;
+function Fixed(lat, lon, locstring, mapzoom, logo, primarycolor, slogan, showcompany, foursquareid, maplimit, mapterm, cycletime, api, businesses){
+    //this.ID = id;
     this.Lat = lat;
     this.Lon = lon;
     this.LocString = locstring;
@@ -24,6 +24,8 @@ function Fixed(id, lat, lon, locstring, mapzoom, logo, primarycolor, slogan, sho
     this.MapTerm = mapterm;
     this.API = api;
     this.CycleTime = cycletime;
+    if(businesses == ""){this.Businesses = [];}else{this.Businesses = businesses;}
+
 }
 function taResult(n, address_obj, distance, percent_recommended, latitude, rating, cuisine, location_id, api_detail_url, ranking_data, location_string, web_url, price_level, rating_image_url, awards, name, num_reviews, write_review, category, subcategory, ancestors, see_all_photos, longitude){
     this.id = n;
@@ -136,7 +138,8 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
     this.ratingSignals = ratingSignals;
 
     this.hours = "";
-    if(typeof(hours.status) != "undefined")this.hours = hours;
+    if(hours && hours.status)this.hours = hours.status;
+    //if(typeof(hours.status) != "undefined")this.hours = hours;
 
     this.specials = specials;
     this.photos = photos;
@@ -201,7 +204,7 @@ function fqResult(n, id, name, location, categories, verified, stats, price, rat
     powered = '<img src="img/pow_fq.png" />';
 
     this.setContent = function(){
-        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating">'+stars+'</div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="hours"><p>'+hours.status+'</p></div><div class="snippet">'+c_tips+'</div><div class="powered">'+powered+'</div></div><div class="det-right"><div class="imgs_wrap">'+img0+'<div class="small-wrap">'+img1+img2+img3+'</div></div></div></div>';
+        this.content = '<div class="window"><div class="det-left"><div class="top"><div class="name">'+name+'</div><div class="rating">'+stars+'</div></div><div class="adres"><p>'+location.address+'</p><p>'+location.postalCode+' '+location.city+'</p></div><div class="hours"><p>'+this.hours+'</p></div><div class="snippet">'+c_tips+'</div><div class="powered">'+powered+'</div></div><div class="det-right"><div class="imgs_wrap">'+img0+'<div class="small-wrap">'+img1+img2+img3+'</div></div></div></div>';
         //console.log(this.content);
     }
 }
